@@ -1,22 +1,21 @@
 """Web project type plugin for wt-tools."""
 
-from pathlib import Path
-from typing import List, Optional
+from typing import List
 
-from wt_project_web.base import (
+from wt_project_base import BaseProjectType
+from wt_project_base.base import (
     OrchestrationDirective,
-    ProjectType,
     ProjectTypeInfo,
     TemplateInfo,
     VerificationRule,
 )
 
 
-class WebProjectType(ProjectType):
+class WebProjectType(BaseProjectType):
     """Web application project type.
 
-    Provides knowledge templates, verification rules, and orchestration
-    directives for web projects (Next.js, generic SPA).
+    Extends BaseProjectType with web-specific verification rules and
+    orchestration directives (i18n, routing, DB migrations, components).
     """
 
     @property
@@ -43,7 +42,9 @@ class WebProjectType(ProjectType):
         ]
 
     def get_verification_rules(self) -> List[VerificationRule]:
-        return [
+        # Base rules (file-size-limit, no-secrets, todo-tracking) inherited from BaseProjectType
+        base_rules = super().get_verification_rules()
+        web_rules = [
             VerificationRule(
                 id="i18n-completeness",
                 description="All UI strings must exist in all locale files",
@@ -95,16 +96,6 @@ class WebProjectType(ProjectType):
                 },
             ),
             VerificationRule(
-                id="file-size-limit",
-                description="Source files should not exceed 400 lines",
-                check="file-line-count",
-                severity="warning",
-                config={
-                    "pattern": "src/**/*.{tsx,ts}",
-                    "max_lines": 400,
-                },
-            ),
-            VerificationRule(
                 id="ghost-button-text",
                 description="Ghost buttons must be icon-only (no text content)",
                 check="pattern-absence",
@@ -115,9 +106,12 @@ class WebProjectType(ProjectType):
                 },
             ),
         ]
+        return base_rules + web_rules
 
     def get_orchestration_directives(self) -> List[OrchestrationDirective]:
-        return [
+        # Base directives (install-deps, no-parallel-lockfile, config-review) inherited
+        base_directives = super().get_orchestration_directives()
+        web_directives = [
             OrchestrationDirective(
                 id="no-parallel-i18n",
                 description="Serialize changes that modify locale files to prevent merge conflicts",
@@ -142,16 +136,10 @@ class WebProjectType(ProjectType):
                 config={"command": "pnpm db:generate"},
             ),
             OrchestrationDirective(
-                id="install-deps",
-                description="Install dependencies after package.json changes",
-                trigger='change-modifies("package.json")',
-                action="post-merge",
-                config={"command": "pnpm install"},
-            ),
-            OrchestrationDirective(
                 id="cross-cutting-review",
                 description="Flag changes to cross-cutting files for extra review",
                 trigger="change-modifies-any(cross_cutting_files.sidebar, cross_cutting_files.i18n, cross_cutting_files.route_labels)",
                 action="flag-for-review",
             ),
         ]
+        return base_directives + web_directives

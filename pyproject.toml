@@ -7,7 +7,7 @@ name = "wt-project-web"
 version = "0.1.0"
 description = "Web project knowledge plugin for wt-tools"
 requires-python = ">=3.9"
-dependencies = []
+dependencies = ["wt-project-base"]
 
 [project.scripts]
 wt-project-web = "wt_project_web.cli:main"
