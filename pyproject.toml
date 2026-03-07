@@ -1,0 +1,16 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "wt-project-web"
+version = "0.1.0"
+description = "Web project knowledge plugin for wt-tools"
+requires-python = ">=3.9"
+dependencies = []
+
+[project.scripts]
+wt-project-web = "wt_project_web.cli:main"
+
+[project.entry-points."wt_tools.project_types"]
+web = "wt_project_web:WebProjectType"
