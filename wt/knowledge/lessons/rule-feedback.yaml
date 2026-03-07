@@ -1,0 +1,9 @@
+lessons:
+- rule_id: file-size-limit
+  issue: config_improvement
+  context: For Python plugin packages 600 lines is more appropriate than 400 as modules
+    contain dataclasses and ABC definitions
+  timestamp: '2026-03-07'
+  suggested_fix:
+    type: change_config
+    value: 'max_lines: 600'

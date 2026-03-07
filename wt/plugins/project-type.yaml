@@ -4,6 +4,34 @@ type: base
 version: 0.1.0
 description: "Universal project knowledge — rules and directives for any project"
 
-
 # Stats: 3 verification rules, 4 orchestration directives
 # Rules and directives are loaded dynamically from the installed package.
+
+# ── Project Customizations (test overlay) ───────────────────────────
+
+custom_rules:
+  - id: python-package-structure
+    description: "Python packages must have __init__.py"
+    check: file-exists
+    severity: warning
+    config:
+      pattern: "wt_project_*/[!_]*.py"
+      required_sibling: "__init__.py"
+
+disabled_rules:
+  - todo-tracking
+
+rule_overrides:
+  file-size-limit:
+    config:
+      max_lines: 600
+
+custom_directives:
+  - id: reinstall-after-change
+    description: "Reinstall package after pyproject.toml changes"
+    trigger: 'change-modifies("pyproject.toml")'
+    action: post-merge
+    config: { command: "pip install -e ." }
+
+disabled_directives:
+  - install-deps-npm
