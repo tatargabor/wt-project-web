@@ -1,0 +1,13 @@
+core:
+  - project-knowledge.yaml
+  - rules/ui-conventions.md
+  - rules/functional-conventions.md
+  - rules/auth-conventions.md
+  - rules/data-model.md
+  - rules/deployment.md
+
+modules:
+  integrations:
+    description: "External API patterns (webhooks, retry, rate limiting)"
+    files:
+      - rules/integrations.md
