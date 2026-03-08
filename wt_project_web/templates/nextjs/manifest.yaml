@@ -5,6 +5,11 @@ core:
   - rules/auth-conventions.md
   - rules/data-model.md
   - rules/deployment.md
+  - tsconfig.json
+  - tailwind.config.ts
+  - postcss.config.mjs
+  - next.config.js
+  - components.json
 
 modules:
   integrations:
