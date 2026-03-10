@@ -37,6 +37,26 @@ paths:
 - Add `"use client"` only when needed: event handlers, hooks, browser APIs
 - Keep client components small — extract data fetching to server parents
 
+## Responsive Design
+- Breakpoints: `sm` (640px), `md` (768px), `lg` (1024px), `xl` (1280px)
+- Mobile-first: write base styles for mobile, add `md:` / `lg:` for larger screens
+- Grid layouts: 1 column mobile → 2 columns tablet → 3-4 columns desktop
+- Navigation: hamburger menu with drawer on mobile, horizontal nav on desktop
+- Modals: full-screen sheet on mobile (`<Sheet>`), centered dialog on desktop (`<Dialog>`)
+- Tables: horizontal scroll wrapper on mobile, or switch to card layout
+
+## Toast & Notifications
+- Use shadcn `toast` (sonner) for transient feedback — auto-dismiss after 5s
+- Success: green toast, no action needed
+- Error: red toast, persists until dismissed, include retry action if applicable
+- Never use `alert()` or `window.confirm()` — use shadcn Dialog for confirmations
+
+## Loading & Empty States
+- Use skeleton components (shadcn `Skeleton`) during data loading — match the shape of real content
+- Show meaningful empty states with icon + message + action (e.g., "No orders yet" + link)
+- Use `loading.tsx` for route-level streaming — shows shell immediately
+- Disable submit buttons during form submission — show spinner icon
+
 ## File Size
 - Components should stay under 400 lines
 - Split large components: extract hooks, sub-components, or utilities

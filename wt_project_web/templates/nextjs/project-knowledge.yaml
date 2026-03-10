@@ -10,6 +10,11 @@ cross_cutting_files:
   auth:
     - src/lib/auth.ts
     - src/middleware.ts
+  seo:
+    - src/app/sitemap.ts
+    - src/app/robots.ts
+  env_config:
+    - .env.example
 
 # Feature registry — logical features mapped to file scopes.
 # Each feature can reference a rules file for path-scoped activation.
@@ -36,12 +41,31 @@ features:
     touches:
       - src/app/api/**
     description: API routes and server endpoints
+    rules_file: .claude/rules/functional-conventions.md
 
   ui_components:
     touches:
       - src/components/**
     description: Shared UI components (shadcn/ui)
     rules_file: .claude/rules/ui-conventions.md
+
+  seo:
+    touches:
+      - src/app/sitemap.ts
+      - src/app/robots.ts
+      - src/lib/structured-data.ts
+      - src/app/**/opengraph-image*
+    description: SEO metadata, structured data, sitemap, robots
+    rules_file: .claude/rules/seo-conventions.md
+
+  error_handling:
+    touches:
+      - src/app/**/error.tsx
+      - src/app/**/not-found.tsx
+      - src/app/global-error.tsx
+      - src/app/**/loading.tsx
+    description: Error boundaries, 404 pages, loading states
+    rules_file: .claude/rules/error-handling.md
 
 # Verification rule overrides — customize rules from the project type.
 # See: wt-project-base resolve --project-dir .

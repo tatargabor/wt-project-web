@@ -118,6 +118,74 @@ class WebProjectType(BaseProjectType):
                     "target": "tests/e2e/*.spec.ts",
                 },
             ),
+            VerificationRule(
+                id="page-metadata",
+                description="Public pages must export metadata or generateMetadata for SEO",
+                check="file-mentions",
+                severity="warning",
+                config={
+                    "source": {
+                        "pattern": "src/app/**/page.tsx",
+                        "exclude": [
+                            "src/app/api/**",
+                            "src/app/**/admin/**",
+                            "src/app/**/account/**",
+                        ],
+                    },
+                    "mentions": ["metadata", "generateMetadata"],
+                },
+            ),
+            VerificationRule(
+                id="image-alt-text",
+                description="Images must have alt text for accessibility",
+                check="pattern-absence",
+                severity="warning",
+                config={
+                    "pattern": "src/**/*.tsx",
+                    "forbidden": r'<(?:img|Image)\s+(?:(?!alt)[a-zA-Z]+=)[^>]*/>',
+                },
+            ),
+            VerificationRule(
+                id="env-example-sync",
+                description="New env vars must be documented in .env.example",
+                check="cross-reference",
+                severity="warning",
+                config={
+                    "groups": [
+                        {
+                            "name": "env-vars",
+                            "files": [
+                                {"role": "usage", "pattern": "src/**/*.{ts,tsx}"},
+                                {"role": "definition", "file": ".env.example"},
+                            ],
+                            "key_pattern": "process.env.",
+                        }
+                    ]
+                },
+            ),
+            VerificationRule(
+                id="error-boundary-exists",
+                description="App must have root error.tsx, global-error.tsx, and not-found.tsx",
+                check="file-mentions",
+                severity="warning",
+                config={
+                    "required_files": [
+                        "src/app/error.tsx",
+                        "src/app/global-error.tsx",
+                        "src/app/not-found.tsx",
+                    ],
+                },
+            ),
+            VerificationRule(
+                id="no-public-secrets",
+                description="NEXT_PUBLIC_ prefix must not be used for secret-like env vars",
+                check="pattern-absence",
+                severity="error",
+                config={
+                    "pattern": "src/**/*.{ts,tsx}",
+                    "forbidden": r"NEXT_PUBLIC_(?:SECRET|KEY|PASSWORD|TOKEN|API_KEY|PRIVATE)",
+                },
+            ),
         ]
         return base_rules + web_rules
 
@@ -162,6 +230,19 @@ class WebProjectType(BaseProjectType):
                 config={
                     "message": "Playwright test files detected — ensure playwright.config.ts exists and @playwright/test is in devDependencies"
                 },
+            ),
+            OrchestrationDirective(
+                id="db-seed",
+                description="Re-seed database after schema changes to keep test data current",
+                trigger='change-modifies("prisma/schema.prisma")',
+                action="post-merge",
+                config={"command": "pnpm db:seed", "after": "db-generate"},
+            ),
+            OrchestrationDirective(
+                id="env-example-review",
+                description="Flag changes that add new env vars for .env.example review",
+                trigger="change-modifies-any(cross_cutting_files.env_config)",
+                action="flag-for-review",
             ),
         ]
         return base_directives + web_directives

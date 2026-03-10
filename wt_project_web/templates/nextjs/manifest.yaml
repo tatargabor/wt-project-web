@@ -6,6 +6,11 @@ core:
   - rules/data-model.md
   - rules/deployment.md
   - rules/testing-conventions.md
+  - rules/seo-conventions.md
+  - rules/accessibility.md
+  - rules/performance.md
+  - rules/security.md
+  - rules/error-handling.md
   - tsconfig.json
   - tailwind.config.ts
   - postcss.config.mjs

@@ -21,6 +21,8 @@ paths:
 - `.env` — actual values, gitignored
 - Secrets MUST use platform secret management in production
 - Never commit actual secrets — use placeholders in examples
+- When adding a new env var: ALWAYS add it to `.env.example` with a placeholder value and a comment explaining its purpose
+- Group env vars by service (DATABASE, AUTH, STRIPE, EMAIL, etc.) in `.env.example`
 
 ## Build & Test
 - `pnpm build` must succeed before deploy
