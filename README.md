@@ -2,6 +2,43 @@
 
 Web project type plugin for [wt-tools](https://github.com/anthropics/wt-tools). Provides web-specific verification rules, orchestration directives, and project templates on top of [wt-project-base](https://github.com/anthropics/wt-project-base).
 
+## Why This Exists
+
+AI agents building web applications make predictable mistakes: they forget SEO metadata, skip error boundaries, expose secrets via `NEXT_PUBLIC_`, write inaccessible markup, and create i18n merge conflicts when working in parallel. These aren't edge cases — they happen on every non-trivial project.
+
+**wt-project-web** encodes modern web development standards as machine-readable rules, so agents get it right the first time without needing project-specific instructions for universal concerns.
+
+## What Problem It Solves
+
+When an orchestrator (like wt-tools) spins up multiple AI agents to build a web application in parallel, each agent needs to know:
+
+- **What conventions to follow** — path-scoped rule files activate only when the agent touches relevant files (editing a component triggers UI conventions, not deployment rules)
+- **What to verify before merging** — automated checks catch missing alt text, unsynced locale files, or schema changes without migrations
+- **How to coordinate** — directives prevent merge conflicts (serialize i18n changes), trigger post-merge commands (regenerate Prisma client), and flag cross-cutting modifications for review
+
+Without this, every project needs a massive CLAUDE.md stuffed with web conventions. With it, `wt-project init --project-type web --template nextjs` sets up all conventions automatically.
+
+## Design Principles
+
+- **Generic, not project-specific** — covers universal modern web standards (SEO, a11y, security, performance). No e-commerce logic, no business rules, no framework opinions beyond the chosen template
+- **Path-scoped activation** — rules load only when relevant files are touched, keeping the agent's context window efficient
+- **Layered inheritance** — base → web → organization-specific. Override or disable any rule without forking
+- **Convention over configuration** — sensible defaults that work for 90% of Next.js projects. Customize the remaining 10% via YAML overrides
+
+## Current State
+
+Production-ready for Next.js App Router projects. The `nextjs` template provides a complete set of conventions covering 12 areas of modern web development: UI, functional patterns, auth, data model, deployment, testing, integrations, SEO, accessibility, performance, security, and error handling.
+
+The `spa` template is a minimal starting point for other frameworks (React SPA, Vue, Svelte) — it provides the structure but expects projects to fill in framework-specific conventions.
+
+## Roadmap
+
+- **Template modules** — opt-in convention packs (e.g., `email`, `payments`, `cms`) that add domain-specific rules without bloating the core template
+- **Feedback loop** — agents report which rules triggered, which were useful, and which produced false positives, feeding back into rule refinement
+- **More templates** — Remix, Astro, and framework-agnostic API-only templates
+- **Rule auto-fix** — verification rules that can suggest or apply fixes, not just flag violations
+- **Consumer override UX** — simpler YAML-based customization for per-project rule tuning
+
 ## Quick Start
 
 ```bash
