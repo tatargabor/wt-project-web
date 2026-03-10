@@ -1,12 +1,16 @@
 # wt-project-web
 
-Web project type plugin for [wt-tools](https://github.com/anthropics/wt-tools). Provides web-specific verification rules, orchestration directives, and project templates on top of [wt-project-base](https://github.com/anthropics/wt-project-base).
+Web project type plugin for [wt-tools](https://github.com/tatargabor/wt-tools). Provides web-specific verification rules, orchestration directives, and project templates on top of [wt-project-base](https://github.com/tatargabor/wt-project-base).
+
+> **Status:** Experimental / active development. I built this for my own AI-assisted web projects and am sharing it as a possible direction for others. The conventions reflect my preferences and what I've found works well with AI agents — your mileage may vary. Contributions, forks, and feedback are welcome.
 
 ## Why This Exists
 
 AI agents building web applications make predictable mistakes: they forget SEO metadata, skip error boundaries, expose secrets via `NEXT_PUBLIC_`, write inaccessible markup, and create i18n merge conflicts when working in parallel. These aren't edge cases — they happen on every non-trivial project.
 
 **wt-project-web** encodes modern web development standards as machine-readable rules, so agents get it right the first time without needing project-specific instructions for universal concerns.
+
+The plugin is designed to be **customizable without forking** — disable rules you disagree with, override severities, add your own conventions via YAML, or build a layer on top (e.g., `wt-project-your-org`) that inherits everything and adds organization-specific rules.
 
 ## What Problem It Solves
 
